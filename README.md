@@ -1,1 +1,1 @@
-# Thema9-Praktijdopdracht
+# Thema9-Praktijkopdracht
