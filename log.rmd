@@ -1,4 +1,15 @@
 ---
 title: "Log"
-output: pdf
+output: pdf_document
 ---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+reticulate::use_virtualenv("../Praktijkopdracht/venv")
+```
+
+```{python data, decorate=TRUE, results='hide', file='view.py'}
+```
+This figure shows the chroma signature comparison for 2 fragments of different bird-species songs.
+It was created by transforming the input data to the correct format that is normally outputted by librosa, because the sound data is created using librosa.
