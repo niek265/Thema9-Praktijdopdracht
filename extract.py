@@ -7,12 +7,12 @@ import umap
 from IPython.display import Audio
 import sklearn
 
-df = pd.read_csv("../input/birdsong_metadata.csv")
+df = pd.read_csv("data/birdsong_metadata.csv")
 df.head()
 
 
 def load_audio(file_id):
-    data, samplerate = sf.read("../input/songs/songs/xc"+str(file_id)+".flac")
+    data, samplerate = sf.read("songs/xc"+str(file_id)+".flac")
     s = len(data)/samplerate
     sg = feature.melspectrogram(data, sr=samplerate, hop_length=512)
 
