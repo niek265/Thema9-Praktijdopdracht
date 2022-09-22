@@ -70,7 +70,7 @@ flammea_1 = np.append(flammea_1, my_data_train[0:1, 117:130], axis=0)
 flammea_1 = np.append(flammea_1, my_data_train[0:1, 130:143], axis=0)
 flammea_1 = np.append(flammea_1, my_data_train[0:1, 143:], axis=0)
 
-flammea_1 = np.delete(flammea_1, slice(0, 13), axis=0)  # Delete empty cells
+flammea_1 = np.delete(flammea_1, slice(0, 12), axis=0)  # Delete empty cells
 
 palustris_1 = np.empty((12, 13), int)  # Create empty array for this birdsong
 # Add multiple columns form the original data as a new row
@@ -87,7 +87,7 @@ palustris_1 = np.append(palustris_1, my_data_train[20:21, 117:130], axis=0)
 palustris_1 = np.append(palustris_1, my_data_train[20:21, 130:143], axis=0)
 palustris_1 = np.append(palustris_1, my_data_train[20:21, 143:], axis=0)
 
-palustris_1 = np.delete(palustris_1, slice(0, 13), axis=0)  # Delete empty cells
+palustris_1 = np.delete(palustris_1, slice(0, 12), axis=0)  # Delete empty cells
 
 fig, ax = plt.subplots(nrows=2, figsize=(10, 9))  # Create empty canvas for plots
 img1 = librosa.display.specshow(flammea_1, y_axis='chroma', x_axis='time', ax=ax[0])
