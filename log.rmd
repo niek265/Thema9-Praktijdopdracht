@@ -11,7 +11,7 @@ reticulate::use_virtualenv("../Praktijkopdracht/venv")
 
 # Data cleaning
 The CSV data is supplied by [Edoardo Ferrante on Kaggle](https://www.kaggle.com/datasets/fleanend/birds-songs-numeric-dataset).
-This data was created using the Librosa package for Python, it outputs the intensity of a certain tone at different time intervals from the provided sound file.
+This data was created using the Librosa package for Python. Librosa outputs the intensity of a certain tone at different time intervals from the provided sound file.
 There is a Python script available from the author that explains how the data was transformed from sound files to numeric data points, but this script has a specific shortcoming.
 
 First let's have a look at how Librosa normally outputs the chromogram data:
@@ -32,7 +32,7 @@ First let's have a look at how Librosa normally outputs the chromogram data:
 | chromogram_10 | 0.36895 | 0.38299 | 0.40678 | 0.43114 | 0.45138 | 0.47237 | 0.52333 |
 | chromogram_11 | 0.33855 | 0.34676 | 0.35929 | 0.37378 | 0.38602 | 0.39931 | 0.42756 |
 
-As you can see, the output is a neat table containing the values of 12 different tones at different time intervals. This data is sorted and can be read by Librosa.
+As you can see, the output is a neat array containing the values of 12 different tones at different time intervals. This data is sorted and can be read by Librosa.
 
 Now onto the issue; the provided dataset contains this data in a stacked order, so each sample only takes up one row.
 This is a good idea, but due to sorting by alphabetical order the original order is lost. The order is important because we are working with data over time.
@@ -56,9 +56,21 @@ Here is a look at the provided data:
 | 11  | 0.00947350497274455 | 0.00699383738737368 | 0.372026644035831 | 0.0516494292032762 |
 | 12  | 0.00982270123521504 | 0.00712337798131429 | 0.371129653847745 | 0.051631441504244  |
 
+Each row contains a stack of chromogram data in a non-sequential order. The end of the array also contains the species of the corresponding bird and some spectral centroid data.
+These collumns need to be deleted since we want to predict using only the chromogram data.
+
 ![Comparison of the data order](figures/data_flow.png)
+
+
+Figure 1 shows a comparison of the order of provided data and the ideal order the data should be sorted in.
+The following script processes the provided data to the aforementioned format and deletes the unnecessary columns.
 
 ```{python data, decorate=TRUE, results='hide', file='view.py'}
 ```
 This figure shows the chroma signature comparison for 2 fragments of different bird-species songs.
 It was created by transforming the input data to the correct format that is normally outputted by librosa, because the sound data is created using librosa.
+The x-axis shows the time of the sound fragment, while the y-axis shows the intensity of different tones on the given time.
+
+```{r}
+chromogram_data <- read.csv('data/dataframe_train.csv', header = TRUE, sep = ',')
+```
