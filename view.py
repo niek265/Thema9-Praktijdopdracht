@@ -36,6 +36,22 @@ with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the col
 my_column_names = np.delete(my_column_names, slice(-1, -16, -1))
 my_column_names = np.delete(my_column_names, 0)  # Delete ID's
 
+with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the column names into numpy
+    train_species = np.genfromtxt(csvfile, dtype=str, delimiter=',')
+    train_species_list = []
+    for count, row in enumerate(train_species):  # Create a list to store species data
+        train_species_list.append(f"{train_species[count:count+1, -15][0]} {train_species[count:count+1, -1][0]}")
+    csvfile.close()
+train_species_list.pop(0)
+
+with open('data/test.csv', newline='') as csvfile:  # Open CSV and load the column names into numpy
+    test_species = np.genfromtxt(csvfile, dtype=str, delimiter=',')
+    test_species_list = []
+    for count, row in enumerate(test_species):  # Create a list to store species data
+        test_species_list.append(f"{test_species[count:count+1, -15][0]} {test_species[count:count+1, -1][0]}")
+    csvfile.close()
+test_species_list.pop(0)
+
 # The given data was sorted by alphabetical order, but this results in broken sequences
 # Rearrange the data to the correct format for librosa
 index = [0, 39, 52, 65, 78, 91, 104, 117, 130, 143, 13, 26,  # Chromogram 1
@@ -104,10 +120,10 @@ cbar_ax = fig.add_axes([0.91, 0.15, 0.05, 0.7])  # Set axis for the colorbar
 fig.colorbar(mappable=img1, cax=cbar_ax)
 fig.suptitle('Chroma comparison for 2 birdsongs', fontsize=32)
 
-df = pd.DataFrame(my_data_train, columns=my_column_names)  # Export clean training data to csv
-df.to_csv('data/dataframe_train.csv', index=False, header=True, sep=',')
+df = pd.DataFrame(my_data_train, columns=my_column_names, index=train_species_list)  # Export clean training data to csv
+df.to_csv('data/dataframe_train.csv', index=True, header=True, sep=',')
 
-df = pd.DataFrame(my_data_test, columns=my_column_names)  # Export clean testing data to csv
-df.to_csv('data/dataframe_test.csv', index=False, header=True, sep=',')
+df = pd.DataFrame(my_data_test, columns=my_column_names, index=test_species_list)  # Export clean testing data to csv
+df.to_csv('data/dataframe_test.csv', index=True, header=True, sep=',')
 
 plt.show()
