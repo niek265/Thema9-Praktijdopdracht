@@ -16,24 +16,27 @@ import matplotlib.pyplot as plt
 with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the data into numpy
     my_data_train = np.genfromtxt(csvfile, delimiter=',')
     csvfile.close()
-# Delete the last columns containing other data
-my_data_train = np.delete(my_data_train, slice(-1, -16, -1), axis=1)
+# Delete the species info columns
+my_data_train = np.delete(my_data_train, -1, axis=1)
+my_data_train = np.delete(my_data_train, -14, axis=1)
 my_data_train = np.delete(my_data_train, 0, axis=1)  # Delete ID's
 my_data_train = np.delete(my_data_train, 0, axis=0)  # Delete column names
 
 with open('data/test.csv', newline='') as csvfile:  # Open CSV and load the data into numpy
     my_data_test = np.genfromtxt(csvfile, delimiter=',')
     csvfile.close()
-# Delete the last columns containing other data
-my_data_test = np.delete(my_data_test, slice(-1, -16, -1), axis=1)
+# Delete the species info columns
+my_data_test = np.delete(my_data_test, -1, axis=1)
+my_data_test = np.delete(my_data_test, -14, axis=1)
 my_data_test = np.delete(my_data_test, 0, axis=1)  # Delete ID's
 my_data_test = np.delete(my_data_test, 0, axis=0)  # Delete column names
 
 with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the column names into numpy
     my_column_names = np.genfromtxt(csvfile, dtype=str, delimiter=',', skip_footer=1760)
     csvfile.close()
-# Delete the last columns containing other data
-my_column_names = np.delete(my_column_names, slice(-1, -16, -1))
+# Delete the species info columns
+my_column_names = np.delete(my_column_names, -1)
+my_column_names = np.delete(my_column_names, -14)
 my_column_names = np.delete(my_column_names, 0)  # Delete ID's
 
 with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the column names into numpy
@@ -66,7 +69,8 @@ index = [0, 39, 52, 65, 78, 91, 104, 117, 130, 143, 13, 26,  # Chromogram 1
          12, 51, 64, 77, 90, 103, 116, 129, 142, 155, 25, 38,  # Chromogram 10
          2, 41, 54, 67, 80, 93, 106, 119, 132, 145, 15, 28,  # Chromogram 11
          3, 42, 55, 68, 81, 94, 107, 120, 133, 146, 16, 29,  # Chromogram 12
-         4, 43, 56, 69, 82, 95, 108, 121, 134, 147, 17, 30]  # Chromogram 13
+         4, 43, 56, 69, 82, 95, 108, 121, 134, 147, 17, 30,  # Chromogram 13
+         156, 157, 161, 162, 163, 164, 165, 166, 167, 158, 159, 160]  # Spectral centroid data
 my_data_train = my_data_train[:, index]  # Apply index to the train data
 my_data_test = my_data_test[:, index]  # Apply index to the test data
 my_column_names = my_column_names[index]  # Apply the index to the collumn names
@@ -84,7 +88,7 @@ flammea_1 = np.append(flammea_1, my_data_train[0:1, 91:104], axis=0)
 flammea_1 = np.append(flammea_1, my_data_train[0:1, 104:117], axis=0)
 flammea_1 = np.append(flammea_1, my_data_train[0:1, 117:130], axis=0)
 flammea_1 = np.append(flammea_1, my_data_train[0:1, 130:143], axis=0)
-flammea_1 = np.append(flammea_1, my_data_train[0:1, 143:], axis=0)
+flammea_1 = np.append(flammea_1, my_data_train[0:1, 143:156], axis=0)
 
 flammea_1 = np.delete(flammea_1, slice(0, 12), axis=0)  # Delete empty cells
 
@@ -101,7 +105,7 @@ palustris_1 = np.append(palustris_1, my_data_train[20:21, 91:104], axis=0)
 palustris_1 = np.append(palustris_1, my_data_train[20:21, 104:117], axis=0)
 palustris_1 = np.append(palustris_1, my_data_train[20:21, 117:130], axis=0)
 palustris_1 = np.append(palustris_1, my_data_train[20:21, 130:143], axis=0)
-palustris_1 = np.append(palustris_1, my_data_train[20:21, 143:], axis=0)
+palustris_1 = np.append(palustris_1, my_data_train[20:21, 143:156], axis=0)
 
 palustris_1 = np.delete(palustris_1, slice(0, 12), axis=0)  # Delete empty cells
 
