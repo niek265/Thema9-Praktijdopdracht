@@ -1,23 +1,66 @@
 ---
 title: "EDA"
 output: pdf_document
+author: Niek Scholten
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
-library(reticulate)
 library(ggplot2)
 library(Dict)
 library(ggpubr)
 library(RWeka)
-reticulate::use_virtualenv("../Thema9-Praktijkopdracht/venv")
 ```
 
-# Data cleaning
+\newpage
+
+# Acquiring the data
 The CSV data is supplied by [Edoardo Ferrante on Kaggle](https://www.kaggle.com/datasets/fleanend/birds-songs-numeric-dataset).
 This data was created using the Librosa package for Python. Librosa outputs the intensity of a certain tone at different time intervals from the provided sound file.
-There is a Python script available from the author that explains how the data was transformed from sound files to numeric data points, but this script has a specific shortcoming.
+The original songs are gathered from [the Brittish Birdsong Dataset](https://www.kaggle.com/datasets/rtatman/british-birdsong-dataset) and processed using a Python script.
+This script is available from the author and explains how the data was transformed from sound files to numeric data points, but this script has a specific shortcoming that will hinder our ability to visualize it.
+It will be explained further in the data cleaning section, but in short it is an error that's made while sorting the data when the order is of absolute importance.
 
+Each row in the dataset contains the chromogram data, spectral centroid data along with the genus and species name.
+The structure for chromogram data is made up from values ranging from zero to one.
+These values represent the intensity of different tones at a certain time in the audio fragment.
+1 is loudest/clearest and 0 is silent/non-distinguishable.
+
+| Name of datapoint | Description                     |
+|-------------------|---------------------------------|
+| chromogram_0_0    | Tone intensity for B at time 0  |
+| chromogram_1_0    | Tone intensity for A# at time 0 |
+| chromogram_2_0    | Tone intensity for A at time 0  |
+| chromogram_3_0    | Tone intensity for G# at time 0 |
+| chromogram_4_0    | Tone intensity for G at time 0  |
+| chromogram_5_0    | Tone intensity for F# at time 0 |
+| chromogram_6_0    | Tone intensity for F at time 0  |
+| chromogram_7_0    | Tone intensity for E at time 0  |
+| chromogram_8_0    | Tone intensity for D# at time 0 |
+| chromogram_9_0    | Tone intensity for D at time 0  |
+| chromogram_10_0   | Tone intensity for C# at time 0 |
+| chromogram_11_0   | Tone intensity for C at time 0  |
+| chromogram_0_1    | Tone intensity for B at time 1  |
+
+Not all datapoints are represented in this table, because there are 13 timepoints which contain 12 tones each.
+The data continues this format for the rest of the set.
+
+There is also spectral centroid data, this is a measurement of the shape a waveform has at a certain point in time.
+A higher value of a spectral centroid corresponds to more energy of the signal being concentrated within higher frequencies.
+
+| Name of datapoint | Description                 |
+|-------------------|-----------------------------|
+| spec_centr_0      | Spectral centroid at time 0 |
+| spec_centr_1      | Spectral centroid at time 1 |
+| spec_centr_2      | Spectral centroid at time 2 |
+| spec_centr_3      | Spectral centroid at time 3 |
+
+Spectral centroid data could be used as an extra signature to classify the songs with.
+The data continues this format for the rest of the set.
+
+\newpage
+
+# Data cleaning
 First let's have a look at how Librosa normally outputs the chromogram data:
 
 
@@ -40,7 +83,7 @@ As you can see, the output is a neat array containing the values of 12 different
 
 Now onto the issue; the provided dataset contains this data in a stacked order, so each sample only takes up one row.
 This is a good idea, but due to sorting by alphabetical order the original order is lost. The order is important because we are working with data over time.
-This is not a problem if the trained model is only used on the provided test data, but we want the trained model to work in as many situations as possible.
+This is not a problem if the trained model is only used on the provided test data, but we want the trained model to work in as many situations as possible and be able to visualize it with ease.
 
 Here is a look at the provided data:
 
@@ -63,14 +106,23 @@ Here is a look at the provided data:
 Each row contains a stack of chromogram data in a non-sequential order. The end of the array also contains the species of the corresponding bird and some spectral centroid data.
 These collumns need to be deleted since we want to predict using only the chromogram data.
 
+\newpage
+
 ![Comparison of the data order](figures/data_flow.png)
 
 
 Figure 1 shows a comparison of the order of provided data and the ideal order the data should be sorted in.
 The following script processes the provided data to the aforementioned format and deletes the unnecessary columns.
 
-```{python data, decorate=TRUE, results='hide', file='view.py'}
+\newpage
+
+```{python data, decorate=TRUE, results='hide', file='view.py', eval = FALSE}
 ```
+
+\newpage
+
+![Chroma signature comparison for Acanthis Flammea & Acrocephalus Palustris](figures/chroma_comparison.png)
+
 This figure shows the chroma signature comparison for 2 fragments of different bird-species songs.
 It was created by transforming the input data to the correct format that is normally outputted by librosa, because the sound data is created using librosa.
 The x-axis shows the time of the sound fragment, while the y-axis shows the intensity of different tones on the given time.
@@ -83,6 +135,8 @@ colnames(chromogram_data_train)[1] <- "Species"
 colnames(chromogram_data_test)[1] <- "Species"
 
 ```
+
+\newpage
 
 ```{r}
 # Function for transferring row data into data frames
