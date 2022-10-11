@@ -6,13 +6,11 @@ output: pdf_document
 ```{r setup, include=FALSE}
 library(knitr)
 library(reticulate)
-library(ggridges)
 library(ggplot2)
-library(viridis)
-library(hrbrthemes)
 library(Dict)
 library(ggpubr)
-reticulate::use_virtualenv("../Praktijkopdracht/venv")
+library(RWeka)
+reticulate::use_virtualenv("../Thema9-Praktijkopdracht/venv")
 ```
 
 # Data cleaning
@@ -78,26 +76,31 @@ It was created by transforming the input data to the correct format that is norm
 The x-axis shows the time of the sound fragment, while the y-axis shows the intensity of different tones on the given time.
 
 ```{r}
-chromogram_data <- read.csv('data/dataframe_train.csv', header = TRUE, sep = ',')
+chromogram_data_train <- read.csv('data/dataframe_train.csv', header = TRUE, sep = ',')
+chromogram_data_test <- read.csv('data/dataframe_test.csv', header = TRUE, sep = ',')
+
+colnames(chromogram_data_train)[1] <- "Species"
+colnames(chromogram_data_test)[1] <- "Species"
+
 ```
 
 ```{r}
 # Function for transferring row data into data frames
 index_data <- function (row_number) {
   temp <- data.frame()
-  temp[1, 1:12] <- chromogram_data[row_number, 2:13]
-  temp[2, 1:12] <- chromogram_data[row_number, 14:25]
-  temp[3, 1:12] <- chromogram_data[row_number, 26:37]
-  temp[4, 1:12] <- chromogram_data[row_number, 38:49]
-  temp[5, 1:12] <- chromogram_data[row_number, 50:61]
-  temp[6, 1:12] <- chromogram_data[row_number, 62:73]
-  temp[7, 1:12] <- chromogram_data[row_number, 74:85]
-  temp[8, 1:12] <- chromogram_data[row_number, 86:97]
-  temp[9, 1:12] <- chromogram_data[row_number, 98:109]
-  temp[10, 1:12] <- chromogram_data[row_number, 110:121]
-  temp[11, 1:12] <- chromogram_data[row_number, 122:133]
-  temp[12, 1:12] <- chromogram_data[row_number, 134:145]
-  temp[13, 1:12] <- chromogram_data[row_number, 146:157]
+  temp[1, 1:12] <- chromogram_data_train[row_number, 2:13]
+  temp[2, 1:12] <- chromogram_data_train[row_number, 14:25]
+  temp[3, 1:12] <- chromogram_data_train[row_number, 26:37]
+  temp[4, 1:12] <- chromogram_data_train[row_number, 38:49]
+  temp[5, 1:12] <- chromogram_data_train[row_number, 50:61]
+  temp[6, 1:12] <- chromogram_data_train[row_number, 62:73]
+  temp[7, 1:12] <- chromogram_data_train[row_number, 74:85]
+  temp[8, 1:12] <- chromogram_data_train[row_number, 86:97]
+  temp[9, 1:12] <- chromogram_data_train[row_number, 98:109]
+  temp[10, 1:12] <- chromogram_data_train[row_number, 110:121]
+  temp[11, 1:12] <- chromogram_data_train[row_number, 122:133]
+  temp[12, 1:12] <- chromogram_data_train[row_number, 134:145]
+  temp[13, 1:12] <- chromogram_data_train[row_number, 146:157]
   return(as.data.frame(temp))
 }
 
@@ -120,17 +123,22 @@ flammea <-ggplot(data = index_data(1), aes(y = chromogram_0_0, x = 1:13)) +
               ylim(0,1) +
               ylab(tones["chromogram_0_0"]) +
               xlab("Time") +
-              ggtitle(chromogram_data[1,1])
+              ggtitle(chromogram_data_train[1,1])
 
 palustris <- ggplot(data = index_data(21), aes(y = chromogram_0_0, x = 1:13)) +
               geom_line() +
               ylim(0, 1) +
               ylab(tones["chromogram_0_0"]) +
               xlab("Time") +
-              ggtitle(chromogram_data[21,1])
+              ggtitle(chromogram_data_train[21,1])
 
 ggarrange(flammea, palustris,
           ncol = 1, nrow = 2)
 ```
 
 The figure above shows a significant difference in the tone intensity over time for 2 different bird species.
+
+```{r}
+write.arff(chromogram_data_train, file = "data/birdsong_train.arff")
+write.arff(chromogram_data_test, file = "data/birdsong_test.arff")
+```
