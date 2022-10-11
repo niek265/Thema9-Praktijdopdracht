@@ -40,7 +40,7 @@ with open('data/train.csv', newline='') as csvfile:  # Open CSV and load the col
     train_species = np.genfromtxt(csvfile, dtype=str, delimiter=',')
     train_species_list = []
     for count, row in enumerate(train_species):  # Create a list to store species data
-        train_species_list.append(f"{train_species[count:count+1, -15][0]} {train_species[count:count+1, -1][0]}")
+        train_species_list.append(f"{train_species[count:count+1, -15][0]}_{train_species[count:count+1, -1][0]}")
     csvfile.close()
 train_species_list.pop(0)
 
@@ -48,7 +48,7 @@ with open('data/test.csv', newline='') as csvfile:  # Open CSV and load the colu
     test_species = np.genfromtxt(csvfile, dtype=str, delimiter=',')
     test_species_list = []
     for count, row in enumerate(test_species):  # Create a list to store species data
-        test_species_list.append(f"{test_species[count:count+1, -15][0]} {test_species[count:count+1, -1][0]}")
+        test_species_list.append(f"{test_species[count:count+1, -15][0]}_{test_species[count:count+1, -1][0]}")
     csvfile.close()
 test_species_list.pop(0)
 
