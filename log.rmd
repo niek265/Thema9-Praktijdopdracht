@@ -7,9 +7,11 @@ author: Niek Scholten
 ```{r setup, include=FALSE}
 library(knitr)
 library(ggplot2)
+library(ggbiplot)
 library(Dict)
 library(ggpubr)
 library(RWeka)
+library(dplyr)
 ```
 
 \newpage
@@ -127,18 +129,20 @@ This figure shows the chroma signature comparison for 2 fragments of different b
 It was created by transforming the input data to the correct format that is normally outputted by librosa, because the sound data is created using librosa.
 The x-axis shows the time of the sound fragment, while the y-axis shows the intensity of different tones on the given time.
 
-```{r}
+```{r read}
 chromogram_data_train <- read.csv('data/dataframe_train.csv', header = TRUE, sep = ',')
 chromogram_data_test <- read.csv('data/dataframe_test.csv', header = TRUE, sep = ',')
 
 colnames(chromogram_data_train)[1] <- "Species"
 colnames(chromogram_data_test)[1] <- "Species"
 
+# write.arff(chromogram_data_train, file = "data/birdsong_train.arff")
+# write.arff(chromogram_data_test, file = "data/birdsong_test.arff")
 ```
 
 \newpage
 
-```{r}
+```{r index}
 # Function for transferring row data into data frames
 index_data <- function (row_number) {
   temp <- data.frame()
@@ -192,7 +196,47 @@ ggarrange(flammea, palustris,
 
 The figure above shows a significant difference in the tone intensity over time for 2 different bird species.
 
-```{r}
-write.arff(chromogram_data_train, file = "data/birdsong_train.arff")
-write.arff(chromogram_data_test, file = "data/birdsong_test.arff")
+\newpage
+
+```{r pca}
+chromogram_data_train$Species <- factor(chromogram_data_train$Species)
+results <- prcomp(chromogram_data_train[1541:1620, 158:169],
+                  center = T,
+                  scale. = T)
+ggbiplot(results,
+         obs.scale = 1,
+         var.scale = 1,
+         ellipse = T,
+         groups = chromogram_data_train$Species[1541:1620]) +
+         theme(legend.position = "bottom")
 ```
+
+This is a PCA (Principal Component Analysis) of 4 different species of birds. These birds originate from the same genus, but as seen in the figure there is no clear cohesion between the groups.
+
+\newpage
+
+```{r cluster, warning=False}
+mds <- chromogram_data_train[0:20,2:169] %>%
+        dist() %>%
+        cmdscale() %>%
+        as_tibble()
+colnames(mds) <- c("Dim.1", "Dim.2")
+
+set.seed(16)
+clust <- kmeans(mds, 3)$cluster %>%
+        as.factor()
+mds <- mds %>%
+        mutate(groups = clust)
+
+ggscatter(mds, x = "Dim.1", y = "Dim.2",
+          main = "K-Means clusters of multi-dimensional scaling from Acanthis Flammea",
+          color = "groups",
+          palette = hue_pal()(3),
+          size = 1,
+          ellipse = T,
+          repel = TRUE,) +
+        theme(legend.position = "bottom")
+```
+
+This scatter plot displays the kmeans of all 20 samples from 1 bird species. There are 3 distinct groups within this 1 species, this can be explained by looking at the metadata.
+The metadata tells us that 3 different recordings were used for the creation of the data for this specific species.
