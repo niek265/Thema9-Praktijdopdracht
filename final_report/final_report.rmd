@@ -1,0 +1,72 @@
+---
+output:
+    pdf_document:
+        keep_tex:  true
+        toc: true
+        toc_depth: 2
+        number_sections: true
+        fig_caption: yes
+        includes:
+            before_body: title.tex
+            in_header: header.tex
+---
+```{r setup, include = FALSE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+BOSS_MODE <- TRUE
+packages <- c("knitr", "ggplot2", "ggbiplot", "Dict", "ggpubr", "RWeka", "dplyr")
+invisible(lapply(packages, library, character.only = T))
+```
+
+[//]: # (Page 4: Table of Contents)
+
+\newpage
+
+[//]: # (Page 5: Introduction)
+\pagenumbering{arabic}
+
+# Introduction
+## Purpose
+Here goes the purpose.
+
+## Theory
+Here goes the theory.
+
+\newpage
+
+[//]: # (Page 6: Materials & Methods)
+
+# Materials & Methods
+Here goes the intro for materials & methods.
+
+## Materials
+Here goes the meterials.
+
+## Methods
+Here goes the methods.
+
+\newpage
+
+[//]: # (Page 6: Results)
+
+# Results
+Here goes the results.
+
+\newpage
+
+[//]: # (Page 7: Conclusion)
+
+# Conclusion
+Here goes the cunclusion.
+
+\newpage
+
+[//]: # (Page 8: Discussion)
+
+# Discussion
+Here goes the discussion.
+
+\newpage
