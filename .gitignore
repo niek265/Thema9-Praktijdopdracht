@@ -3,3 +3,5 @@
 /gradle/
 /gradlew
 /gradlew.bat
+/log_cache/
+/log_files/
