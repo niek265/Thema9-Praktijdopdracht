@@ -215,7 +215,7 @@ This is a PCA (Principal Component Analysis) of 4 different species of birds. Th
 
 \newpage
 
-```{r cluster, warning=False}
+```{r cluster, warning=F}
 mds <- chromogram_data_train[0:20,2:169] %>%
         dist() %>%
         cmdscale() %>%
