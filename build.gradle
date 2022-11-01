@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
@@ -18,4 +19,16 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "nl.bioinf.WekaRunner"
+    }
+}
+
+shadowJar {
+    manifest {
+        attributes "Main-Class": "nl.bioinf.WekaRunner"
+    }
 }
