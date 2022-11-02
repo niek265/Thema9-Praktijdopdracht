@@ -17,7 +17,7 @@ public class WekaRunner {
     }
 
     private void start() {
-        String datafile = "data/birdsong_test_nominal_unlabeled.arff";
+        String datafile = "data/birdsong_test_nominal_unlabeled_randomized.arff";
         try {
             InputMappedClassifier fromFile = loadClassifier();
             Instances unknownInstances = loadArff(datafile);
