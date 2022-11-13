@@ -247,7 +247,7 @@ This difference can be explored further by analyzing one tone at the time.
 
 
 Figure \ref{fig:fig4} also shows a clear difference in tone intensity over the duration of the sound fragment.
-Tone B was chosen as an example, but multiple tones exhibit this behaviour as seen in Figure 2.
+Tone B was chosen as an example, but multiple tones exhibit this behaviour as seen in Figure 3.
 
 \newpage
 
